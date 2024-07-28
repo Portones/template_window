@@ -15,6 +15,6 @@ db_params = {
 app_name = "PRUEBA"
 app_list = {
     "nombre1": "main_nombre1.py",
-    "nombre2": "fichero",
+    "nombre2": "main_nombre2.py",
     "nombre3": "fichero"
 }

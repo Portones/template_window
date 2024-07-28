@@ -1,43 +1,64 @@
-import os
 import flet as ft
-
+import subprocess
 from consts import app_list
 
-def execute_program(program_path):
-    os.system(f"python {os.path.join(os.getcwd(), program_path)}")
+def execute_program(program_path, output_field):
+    def run_program(e):
+        output_field.value = ""
+        process = subprocess.Popen(
+            ["python", program_path], 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, 
+            text=True
+        )
+
+        for line in process.stdout:
+            output_field.value += line
+            output_field.update()
+
+        for line in process.stderr:
+            output_field.value += line
+            output_field.update()
+
+    return run_program
 
 def main_widget(version_mss):
+    output_field = ft.TextField(
+        label="App Result",
+        disabled=True,
+        value=version_mss,
+        multiline=True,
+        expand=True
+    )
 
-    result_text_wiget = ft.TextField(
-                            label="App Result",
-                            disabled=True,
-                            value=version_mss,
-                            multiline=True
-                        )
     all_app_widget = ft.Row(
-        controls=[],
-        wrap=True
+        wrap=True,
+        spacing=20,
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+        controls=[]
     )
     
-    for app in app_list:
+    for app_name, app_path in app_list.items():
         all_app_widget.controls.append(
             ft.Row(
+                wrap=True,
+                width=225,
                 controls=[
-                    ft.Text(app, size=40),
+                    ft.Text(app_name, size=40),
                     ft.IconButton(
                         icon=ft.icons.PLAY_CIRCLE_FILL_OUTLINED,
                         icon_size=30,
-                        on_click=execute_program(app_list[app])
+                        on_click=execute_program(app_path, output_field)
                     )
-                ]
+                ],
             )
         )
 
     widget = ft.Container(
         content=ft.Column(
-            [all_app_widget, result_text_wiget]
+            [all_app_widget, output_field],
+            expand=True
         ),
-        
-        height=300
+        expand=True
     )
     return widget
