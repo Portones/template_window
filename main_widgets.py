@@ -22,7 +22,7 @@ def execute_program(program_path, output_field):
 
     return run_program
 
-def main_widget(version_mss):
+def main_widget(version_mss, version_check):
     output_field = ft.TextField(
         label="App Result",
         disabled=True,
@@ -48,7 +48,8 @@ def main_widget(version_mss):
                     ft.IconButton(
                         icon=ft.icons.PLAY_CIRCLE_FILL_OUTLINED,
                         icon_size=30,
-                        on_click=execute_program(app_path, output_field)
+                        on_click=execute_program(app_path, output_field),
+                        disabled=not version_check
                     )
                 ],
             )

@@ -18,3 +18,9 @@ app_list = {
     "nombre2": "main_nombre2.py",
     "nombre3": "fichero"
 }
+version_statuses = {
+    0: "🔴",
+    1: "🟠",
+    2: "🔵",
+    3: "🟢",
+}

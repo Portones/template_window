@@ -1,7 +1,9 @@
 import flet as ft
 
-def footer_widget(current_version):    
-    version_text = f"Version: {current_version} ✅"
+from consts import version_statuses
+
+def footer_widget(current_version, version_status):
+    version_text = f"Version: {current_version} {version_statuses[version_status]}"
     version_widget = ft.Text(version_text, size=30, weight=ft.FontWeight.BOLD)
     logo_widget = ft.Image(src=f"logoPortPyTech.png", width=90)
     widget = ft.Container(
