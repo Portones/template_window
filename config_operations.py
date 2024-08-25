@@ -1,12 +1,14 @@
 import yaml
+import os
 
 from ddbb_operations import execute_query
-from consts import config_file_name
+from consts import config_file_name, programs_path
 
-def read_config():
-    with open(config_file_name, 'r') as file:
+def read_config(subprogram_path: str = ""):
+    
+    config_file = subprogram_path if subprogram_path else config_file_name
+    with open(config_file, 'r') as file:
         return yaml.safe_load(file)
-
 
 def compare_versions(current_version, new_version):
     try:
@@ -28,21 +30,48 @@ def compare_versions(current_version, new_version):
     return True, "Correct Version", 3
 
 
-def check_version():
-    config = read_config()
-    if config is None:
-        return False
+def check_version(subprogram_name: str = "", subprogram_version: str = ""):
+    if not subprogram_version and not subprogram_name:
+        config = read_config()
 
-    project_name = config["project"]["name"]
-    current_version = config["project"]["version"]
+        if config is None:
+            return False
+
+        project_name = config["project"]["name"]
+        current_version = config["project"]["version"]
+    else:
+        if subprogram_name == "No" and subprogram_version == "No":
+            return compare_versions("1.1.1", "1.1.1")
+        project_name = subprogram_name
+        current_version = subprogram_version
     obtain_version_query = f"select version from projects where project = '{project_name}'"
     try:
         new_version = execute_query(obtain_version_query)[0][0]
+        
     except IndexError:
-        return False, f"El proyecto {project_name} no existe"
-
+        return False, f"El proyecto {project_name} no existe", 0
+    except ValueError:
+        return False, f"El proyecto {project_name} no existe", 0
+    except Exception as e:
+        return False, f"Excepción: {e}", 0
     return compare_versions(current_version, new_version)
 
 
-def obtain_version():
-    return read_config()["project"]["version"]
+def obtain_version(subprogram_path: str = ""):
+    return read_config(subprogram_path)["project"]["version"]
+
+
+def obtain_name(subprogram_path: str = ""):
+    return read_config(subprogram_path)["project"]["name"]
+
+
+def obtain_subprograms_version_and_name(program_path):
+    base_dir = os.path.dirname(program_path)
+    if base_dir == programs_path:
+        return "No", "No"
+    
+    config_file = os.path.join(base_dir, "config.yaml")
+    return obtain_name(config_file), obtain_version(config_file)
+
+    
+   
