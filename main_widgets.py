@@ -40,11 +40,11 @@ def execute_program(program_path, output_field):
 def main_widget(version_mss, version_check):
     output_field = ft.TextField(
         label="App Result",
-        disabled=True,
+        read_only=True,
         value=version_mss,
         multiline=True,
         expand=True,
-        max_lines=10
+        text_size=25
     )
 
     all_app_widget = ft.Row(
