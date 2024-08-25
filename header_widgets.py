@@ -2,8 +2,8 @@ import flet as ft
 
 from consts import app_name
 
-def header_widget():
-    exit_widget = ft.IconButton(icon=ft.icons.EXIT_TO_APP, icon_color="red", icon_size=50)
+def header_widget(page: ft.Page):
+    exit_widget = ft.IconButton(icon=ft.icons.EXIT_TO_APP, icon_color="red", icon_size=50, on_click=lambda _: page.window.destroy())
     app_name_widget = ft.Text(value=app_name, size=50, weight=ft.FontWeight.BOLD)
     settings_widget = ft.IconButton(icon=ft.icons.SETTINGS, icon_color="grey", icon_size=50)
     widget = ft.Row(
